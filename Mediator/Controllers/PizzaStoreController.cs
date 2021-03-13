@@ -2,12 +2,18 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace PizzaStore.Controller
 {
+    [Route("api/[controller]/[action]")]
+    [ApiController]
     public class PizzaStoreController : ControllerBase
     {
-        public PizzaStoreController() { }
+        private readonly Nest.IElasticClient _client;
+        public PizzaStoreController(Nest.IElasticClient client)
+        {
+            _client = client;
+        }
 
         [HttpGet]
-        public IActionResult GetPizzaStoreMenu()
+        public IActionResult GetMenu()
         {
             return Ok();
         }

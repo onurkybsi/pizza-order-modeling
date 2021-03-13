@@ -6,7 +6,6 @@ namespace PizzaStore.Model
     {
         public string Id { get; set; }
         public CreditCard CreditCard { get; set; }
-        public List<Pizza> Pizzas { get; set; }
-        public List<Drink> Drinks { get; set; }
+        public List<MenuItem> OrderedItems { get; set; }
     }
 }
