@@ -1,0 +1,6 @@
+{
+  "ModelProducerBaseURL": "http://localhost:8080/api",
+  "ModelProducerGetMenuEndPoint": "/getMenu",
+  "ModelProducerGetMaterialsEndPoint": "/getMaterials",
+  "ModelProducerCreateOrderEndPoint": "/createOrder"
+}

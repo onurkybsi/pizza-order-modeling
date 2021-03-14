@@ -2,10 +2,11 @@ package com.modelDataProducer.PizzaStore.model;
 
 public class CreditCard {
     private String nameOnCard;
-    private long creditCardNumber;
+    private long cardNumber;
     private byte expirationMonth;
     private byte expirationYear;
     private byte cVV;
+
 
     /**
      * @return String return the nameOnCard
@@ -22,17 +23,17 @@ public class CreditCard {
     }
 
     /**
-     * @return long return the creditCardNumber
+     * @return long return the cardNumber
      */
-    public long getCreditCardNumber() {
-        return creditCardNumber;
+    public long getCardNumber() {
+        return cardNumber;
     }
 
     /**
-     * @param creditCardNumber the creditCardNumber to set
+     * @param cardNumber the cardNumber to set
      */
-    public void setCreditCardNumber(long creditCardNumber) {
-        this.creditCardNumber = creditCardNumber;
+    public void setCardNumber(long cardNumber) {
+        this.cardNumber = cardNumber;
     }
 
     /**

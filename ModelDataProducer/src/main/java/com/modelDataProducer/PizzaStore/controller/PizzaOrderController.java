@@ -9,13 +9,15 @@ import com.modelDataProducer.PizzaStore.model.OrderResult;
 import com.modelDataProducer.PizzaStore.service.MediatorClient.MediatorClient;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/pizzaorder")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
+@RequestMapping("/api")
 public class PizzaOrderController {
     @Autowired
     private MediatorClient mediatorClient;
@@ -36,6 +38,9 @@ public class PizzaOrderController {
 
     @PostMapping("/createOrder")
     public OrderResult creatOrder(Order order) {
-        return mediatorClient.createOrder(order);
+        OrderResult result = new OrderResult();
+        result.setIsSuccess(true);
+        result.setMessage("TEST");
+        return result;
     }
 }
