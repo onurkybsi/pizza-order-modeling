@@ -13,4 +13,8 @@ public interface MediatorClient {
     List<Material> getMaterials();
 
     OrderResult createOrder(Order order);
+
+    List<MenuItem> getMenuItemsByIds(List<String> ids);
+
+    List<Material> getMaterialsByIds(List<String> ids);
 }

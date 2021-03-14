@@ -3,10 +3,9 @@ package com.modelDataProducer.PizzaStore.model;
 public class CreditCard {
     private String nameOnCard;
     private long cardNumber;
-    private byte expirationMonth;
-    private byte expirationYear;
+    private int expirationMonth;
+    private int expirationYear;
     private byte cVV;
-
 
     /**
      * @return String return the nameOnCard
@@ -37,30 +36,30 @@ public class CreditCard {
     }
 
     /**
-     * @return byte return the expirationMonth
+     * @return int return the expirationMonth
      */
-    public byte getExpirationMonth() {
+    public int getExpirationMonth() {
         return expirationMonth;
     }
 
     /**
      * @param expirationMonth the expirationMonth to set
      */
-    public void setExpirationMonth(byte expirationMonth) {
+    public void setExpirationMonth(int expirationMonth) {
         this.expirationMonth = expirationMonth;
     }
 
     /**
-     * @return byte return the expirationYear
+     * @return int return the expirationYear
      */
-    public byte getExpirationYear() {
+    public int getExpirationYear() {
         return expirationYear;
     }
 
     /**
      * @param expirationYear the expirationYear to set
      */
-    public void setExpirationYear(byte expirationYear) {
+    public void setExpirationYear(int expirationYear) {
         this.expirationYear = expirationYear;
     }
 

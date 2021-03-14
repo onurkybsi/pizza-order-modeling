@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using PizzaStore.Model;
 using PizzaStore.Service;
 
 namespace PizzaStore.Controller
@@ -24,6 +25,35 @@ namespace PizzaStore.Controller
         public IActionResult GetMaterials()
         {
             return Ok(_pizzaStoreService.GetMaterials());
+        }
+
+        [HttpGet]
+        public IActionResult GetMenuItemsByIds([FromQuery] GetMenuItemsByIdsRequest request)
+        {
+            if (request is null)
+                return BadRequest();
+
+            return Ok(_pizzaStoreService.GetMenuItemsByIds(request));
+        }
+
+        [HttpGet]
+        public IActionResult GetMaterialsByIds([FromQuery] GetMaterialsByIdsRequest request)
+        {
+            if (request is null)
+                return BadRequest();
+
+            return Ok(_pizzaStoreService.GetMaterialsByIds(request));
+        }
+
+        [HttpPost]
+        public IActionResult UpdateBudget(UpdateBudgetRequest request)
+        {
+            if (request is null)
+                return BadRequest();
+
+            PizzaStore.Model.PizzaStoreMetaData.Budget += request.Amount;
+
+            return Ok();
         }
 
         [HttpPost]

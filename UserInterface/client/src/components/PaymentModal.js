@@ -113,7 +113,12 @@ export default class PaymentModal extends Component {
 
   getCreateOrderRequest = () => {
     return {
-      creditCard: this.state.creditCard,
+      creditCard: {
+        nameOnCard: this.state.creditCard.nameOnCard,
+        cardNumber: this.state.creditCard.cardNumber,
+        expirationMonth: Number(this.state.creditCard.expirationMonth),
+        expirationYear: Number(this.state.creditCard.expirationYear)
+      },
       orderedItems: this.props.getOrderedMenuItems(),
     };
   };

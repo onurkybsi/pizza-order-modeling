@@ -19,6 +19,7 @@ namespace PizzaStore
             var configuration = Helper.CreateConfigurationWithEnvironmentVariables(Directory.GetCurrentDirectory(), Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
             IHost host = CreateHostBuilder(args, configuration).Build();
 
+            Model.PizzaStoreMetaData.Budget = Convert.ToInt32(configuration["PizzaStoreBudget"]);
             using (var scope = host.Services.CreateScope())
             {
                 SeedData(scope.ServiceProvider);
