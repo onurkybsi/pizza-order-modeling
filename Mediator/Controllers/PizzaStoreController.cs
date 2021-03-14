@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using PizzaStore.Service;
 
 namespace PizzaStore.Controller
 {
@@ -6,21 +7,29 @@ namespace PizzaStore.Controller
     [ApiController]
     public class PizzaStoreController : ControllerBase
     {
-        private readonly Nest.IElasticClient _client;
-        public PizzaStoreController(Nest.IElasticClient client)
+        private readonly IPizzaStoreService _pizzaStoreService;
+
+        public PizzaStoreController(IPizzaStoreService pizzaStoreService)
         {
-            _client = client;
+            _pizzaStoreService = pizzaStoreService;
         }
 
         [HttpGet]
         public IActionResult GetMenu()
         {
-            return Ok();
+            return Ok(_pizzaStoreService.GetMenu());
+        }
+
+        [HttpGet]
+        public IActionResult GetMaterials()
+        {
+            return Ok(_pizzaStoreService.GetMaterials());
         }
 
         [HttpPost]
-        public IActionResult CreateOrder([FromBody] Model.Order order)
+        public IActionResult CreateOrder()
         {
+            // TO-DO
             return Ok();
         }
     }

@@ -4,11 +4,26 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class MenuItem {
+    private String id;
     private String name;
     private MenuItemType type;
-    private ArrayList<Material> requiredMaterials;
+    private ArrayList<MenuItemRequiredMaterial> requiredMaterials;
     private int preparationTimeInMinute;
     private BigDecimal price;
+
+    /**
+     * @return String return the id
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
 
     /**
      * @return String return the name
@@ -39,16 +54,16 @@ public class MenuItem {
     }
 
     /**
-     * @return ArrayList<Material> return the requiredMaterials
+     * @return ArrayList<MenuItemRequiredMaterial> return the requiredMaterials
      */
-    public ArrayList<Material> getRequiredMaterials() {
+    public ArrayList<MenuItemRequiredMaterial> getRequiredMaterials() {
         return requiredMaterials;
     }
 
     /**
      * @param requiredMaterials the requiredMaterials to set
      */
-    public void setRequiredMaterials(ArrayList<Material> requiredMaterials) {
+    public void setRequiredMaterials(ArrayList<MenuItemRequiredMaterial> requiredMaterials) {
         this.requiredMaterials = requiredMaterials;
     }
 

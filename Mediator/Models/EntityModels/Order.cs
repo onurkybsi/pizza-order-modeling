@@ -1,10 +1,11 @@
+using System;
 using System.Collections.Generic;
 
-namespace PizzaStore.Model
+namespace PizzaStore.Model.Entity
 {
     public class Order
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         public CreditCard CreditCard { get; set; }
         public List<MenuItem> OrderedItems { get; set; }
     }

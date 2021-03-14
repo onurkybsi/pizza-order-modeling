@@ -1,4 +1,4 @@
-namespace PizzaStore.Model
+namespace PizzaStore.Model.Entity
 {
     public class CreditCard
     {

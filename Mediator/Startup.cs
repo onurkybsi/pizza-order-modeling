@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Nest;
+using PizzaStore.Service;
 
 namespace PizzaStore
 {
@@ -20,6 +21,7 @@ namespace PizzaStore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IElasticClient, ElasticClient>(sp => new ElasticClient(new ConnectionSettings(new Uri(Configuration["ElasticsearchURL"]))));
+            services.AddSingleton<IPizzaStoreService, PizzaStoreService>();
             services.AddControllers().AddNewtonsoftJson();
         }
 

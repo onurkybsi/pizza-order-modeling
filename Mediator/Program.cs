@@ -1,11 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Nest;
+using PizzaStore.Model.Entity;
 using PizzaStore.Service;
 
 namespace PizzaStore
@@ -40,11 +41,32 @@ namespace PizzaStore
             var elasticClient = services.GetRequiredService<IElasticClient>();
             var configuration = services.GetRequiredService<IConfiguration>();
 
-            var initialMaterialData = configuration.GetSection("InitialMaterialData").Get<Model.Material[]>();
-            elasticClient.IndexManyWithIndexExistenceControl(configuration["MaterialIndexName"], initialMaterialData);
+            Material[] materials = SeedMaterialIndex(elasticClient, configuration);
+            SeedMenuIndex(elasticClient, configuration, materials);
+        }
 
-            var initialMenuItemData = configuration.GetSection("InitialMenuData").Get<Model.MenuItem[]>();
-            elasticClient.IndexManyWithIndexExistenceControl(configuration["MenuIndexName"], initialMenuItemData);
+        private static Material[] SeedMaterialIndex(IElasticClient client, IConfiguration configuration)
+        {
+            var initialMaterialData = configuration.GetSection("InitialMaterialData").Get<Material[]>();
+            client.IndexManyWithIndexExistenceControl(configuration["MaterialIndexName"], initialMaterialData);
+
+            return initialMaterialData;
+        }
+
+        private static void SeedMenuIndex(IElasticClient client, IConfiguration configuration, Material[] menuItemMaterials)
+        {
+            var initialMenuItemData = configuration.GetSection("InitialMenuData").Get<MenuItem[]>();
+
+            foreach (var menuItem in initialMenuItemData)
+            {
+                if (menuItem.RequiredMaterials is null || menuItem.RequiredMaterials.Count() <= 0)
+                    continue;
+
+                foreach (var requiredMaterial in menuItem.RequiredMaterials)
+                    requiredMaterial.Id = menuItemMaterials.Where(material => material.Name == requiredMaterial.Name)?.FirstOrDefault()?.Id;
+            }
+
+            client.IndexManyWithIndexExistenceControl(configuration["MenuIndexName"], initialMenuItemData);
         }
     }
 }
