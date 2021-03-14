@@ -23,9 +23,10 @@ import org.springframework.stereotype.Component;
 public class MediatorClientImp implements MediatorClient {
     @Value("${MEDIATOR_BASE_URL}")
     private String mediatorBaseURL;
-
-    private static final String GETMENU_ENDPOINT = "/pizzastore/getmenu";
-    private static final String GETMATERIALS_ENDPOINT = "/pizzastore/getmaterials";
+    @Value("${GETMENU_ENDPOINT}")
+    private String getMenuEndPoint;
+    @Value("${GETMATERIALS_ENDPOINT}")
+    private String getMaterialsEndPoint;
 
     private HttpClient client;
 
@@ -37,7 +38,7 @@ public class MediatorClientImp implements MediatorClient {
     public List<MenuItem> getMenu() {
         ArrayList<MenuItem> menu = new ArrayList<>();
 
-        HttpRequest mediatorGetMenuRequest = createMediatorRequest(GETMENU_ENDPOINT);
+        HttpRequest mediatorGetMenuRequest = createMediatorRequest(getMenuEndPoint);
 
         try {
             HttpResponse<String> response = client.send(mediatorGetMenuRequest, BodyHandlers.ofString());
@@ -61,7 +62,7 @@ public class MediatorClientImp implements MediatorClient {
     public List<Material> getMaterials() {
         ArrayList<Material> materials = new ArrayList<>();
 
-        HttpRequest mediatorGetMaterialsRequest = createMediatorRequest(GETMATERIALS_ENDPOINT);
+        HttpRequest mediatorGetMaterialsRequest = createMediatorRequest(getMaterialsEndPoint);
 
         try {
             HttpResponse<String> response = client.send(mediatorGetMaterialsRequest, BodyHandlers.ofString());
