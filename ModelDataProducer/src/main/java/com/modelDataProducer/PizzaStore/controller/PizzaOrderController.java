@@ -47,9 +47,7 @@ public class PizzaOrderController {
     public OrderResult creatOrder(@RequestBody Order order) {
         orderService.creatOrder(order);
 
-        OrderResult result = new OrderResult();
-        result.setIsSuccess(true);
-        result.setMessage("TEST");
+        OrderResult result = new OrderResult(true, "TEST");
         return result;
     }
 

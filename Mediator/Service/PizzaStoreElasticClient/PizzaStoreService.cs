@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Nest;
 using PizzaStore.Model;
+using PizzaStore.Model.Business;
 using Business = PizzaStore.Model.Business;
 using Entity = PizzaStore.Model.Entity;
 
@@ -79,6 +81,39 @@ namespace PizzaStore.Service
             List<Business.Material> materials = searchResponse?.Documents?.MapTo<List<Business.Material>>() ?? new List<Business.Material>();
 
             return materials;
+        }
+
+        public StoreMetaData GetStoreBudget()
+        {
+            var searchResponse = _elasticClient.Search<Entity.StoreMetaData>(s => s.Index(_configuration["StoreIndexName"])
+                .Query(q =>
+                    q.Bool(bq =>
+                        bq.Must(must => must.Match(m => m.Field(f => f.IdentifierName).Query(Constants.BudgetMetaDataIdentifierName))))
+                ));
+
+            Business.StoreMetaData budgetMetaData = searchResponse?.Documents?.FirstOrDefault().MapTo<Business.StoreMetaData>();
+
+            return budgetMetaData;
+        }
+
+        public UpdateStoreBudgetResponse UpdateStoreBudget(UpdateStoreBudgetRequest request)
+        {
+            UpdateStoreBudgetResponse response = new UpdateStoreBudgetResponse();
+            try
+            {
+                var storeBudget = GetStoreBudget().MapTo<Entity.StoreMetaData>();
+                storeBudget.Value = request.Amount.ToString();
+                var updateResponse = _elasticClient.Update<Entity.StoreMetaData>(storeBudget.Id, i => i.Index(_configuration["StoreIndexName"]).Doc(storeBudget));
+
+                response.IsSuccess = updateResponse.IsValid;
+            }
+            catch (System.Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = ex.Message.ToString();
+            }
+
+            return response;
         }
     }
 }

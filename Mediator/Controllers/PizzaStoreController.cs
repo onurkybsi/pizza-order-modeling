@@ -45,15 +45,21 @@ namespace PizzaStore.Controller
             return Ok(_pizzaStoreService.GetMaterialsByIds(request));
         }
 
+        [HttpGet]
+        public IActionResult GetStoreBudget()
+        {
+            return Ok(_pizzaStoreService.GetStoreBudget());
+        }
+
         [HttpPost]
-        public IActionResult UpdateBudget(UpdateBudgetRequest request)
+        public ActionResult UpdateStoreBudget(UpdateStoreBudgetRequest request)
         {
             if (request is null)
                 return BadRequest();
 
-            PizzaStore.Model.PizzaStoreMetaData.Budget += request.Amount;
+            var response = _pizzaStoreService.UpdateStoreBudget(request);
 
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPost]

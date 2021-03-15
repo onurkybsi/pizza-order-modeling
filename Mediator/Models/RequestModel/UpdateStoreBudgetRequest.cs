@@ -1,6 +1,6 @@
 namespace PizzaStore.Model
 {
-    public class UpdateBudgetRequest
+    public class UpdateStoreBudgetRequest
     {
         public int Amount { get; set; }
     }

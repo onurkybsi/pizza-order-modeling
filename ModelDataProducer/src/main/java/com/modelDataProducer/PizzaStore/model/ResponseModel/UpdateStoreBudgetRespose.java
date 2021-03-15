@@ -1,13 +1,8 @@
-package com.modelDataProducer.PizzaStore.model;
+package com.modelDataProducer.PizzaStore.model.ResponseModel;
 
-public class OrderResult {
+public class UpdateStoreBudgetRespose {
     private boolean isSuccess;
     private String message;
-
-    public OrderResult(boolean isSuccess, String message) {
-        this.isSuccess = isSuccess;
-        this.message = message;
-    }
 
     /**
      * @return boolean return the isSuccess

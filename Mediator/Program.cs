@@ -19,7 +19,6 @@ namespace PizzaStore
             var configuration = Helper.CreateConfigurationWithEnvironmentVariables(Directory.GetCurrentDirectory(), Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
             IHost host = CreateHostBuilder(args, configuration).Build();
 
-            Model.PizzaStoreMetaData.Budget = Convert.ToInt32(configuration["PizzaStoreBudget"]);
             using (var scope = host.Services.CreateScope())
             {
                 SeedData(scope.ServiceProvider);
@@ -44,6 +43,7 @@ namespace PizzaStore
 
             Material[] materials = SeedMaterialIndex(elasticClient, configuration);
             SeedMenuIndex(elasticClient, configuration, materials);
+            SeedStoreIndex(elasticClient, configuration);
         }
 
         private static Material[] SeedMaterialIndex(IElasticClient client, IConfiguration configuration)
@@ -60,14 +60,28 @@ namespace PizzaStore
 
             foreach (var menuItem in initialMenuItemData)
             {
-                if (menuItem.RequiredMaterials is null || menuItem.RequiredMaterials.Count() <= 0)
+                if (menuItem.Type == MenuItemType.Drink)
+                {
+                    menuItem.Id = menuItemMaterials.Where(material => material.Name == menuItem.Name)?.FirstOrDefault()?.Id;
                     continue;
+                }
+                else
+                {
+                    if (menuItem.RequiredMaterials is null || menuItem.RequiredMaterials.Count() <= 0)
+                        continue;
 
-                foreach (var requiredMaterial in menuItem.RequiredMaterials)
-                    requiredMaterial.Id = menuItemMaterials.Where(material => material.Name == requiredMaterial.Name)?.FirstOrDefault()?.Id;
+                    foreach (var requiredMaterial in menuItem.RequiredMaterials)
+                        requiredMaterial.Id = menuItemMaterials.Where(material => material.Name == requiredMaterial.Name)?.FirstOrDefault()?.Id;
+                }
             }
 
             client.IndexManyWithIndexExistenceControl(configuration["MenuIndexName"], initialMenuItemData);
+        }
+
+        private static void SeedStoreIndex(IElasticClient client, IConfiguration configuration)
+        {
+            var initialStoreData = configuration.GetSection("InitialStoreData").Get<StoreMetaData[]>();
+            client.IndexManyWithIndexExistenceControl(configuration["StoreIndexName"], initialStoreData);
         }
     }
 }

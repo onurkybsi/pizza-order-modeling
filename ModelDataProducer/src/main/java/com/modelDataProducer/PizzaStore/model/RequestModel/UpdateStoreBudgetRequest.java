@@ -1,9 +1,9 @@
 package com.modelDataProducer.PizzaStore.model.RequestModel;
 
-public class UpdateBudgetRequest {
+public class UpdateStoreBudgetRequest {
     private int amount;
 
-    public UpdateBudgetRequest(int amount) {
+    public UpdateStoreBudgetRequest(int amount) {
         this.amount = amount;
     }
 

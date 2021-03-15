@@ -1,3 +1,4 @@
+using System;
 using AutoMapper;
 using Business = PizzaStore.Model.Business;
 using Entity = PizzaStore.Model.Entity;
@@ -14,6 +15,12 @@ namespace PizzaStore.Service
 
                 cfg.CreateMap<Entity.Material, Business.Material>()
                 .ForMember(d => d.Type, opt => opt.MapFrom(u => u.Type == Entity.MaterialType.Pizza ? "PIZZA" : "DRINK"));
+
+                cfg.CreateMap<Entity.StoreMetaData, Business.StoreMetaData>()
+                    .ForMember(d => d.Value, opt => opt.MapFrom(u => Convert.ToInt32(u.Value)));
+
+                cfg.CreateMap<Business.StoreMetaData, Entity.StoreMetaData>()
+                .ForMember(d => d.Value, opt => opt.MapFrom(u => u.Value.ToString()));
             }
         ));
 
