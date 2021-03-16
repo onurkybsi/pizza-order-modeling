@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.modelDataProducer.PizzaStore.model.MenuItem;
 import com.modelDataProducer.PizzaStore.model.Order;
-import com.modelDataProducer.PizzaStore.model.OrderResult;
 import com.modelDataProducer.PizzaStore.model.ResponseModel.BaseResponse;
 import com.modelDataProducer.PizzaStore.service.MediatorClient.MediatorClient;
 import com.modelDataProducer.PizzaStore.service.OrderService.OrderService;

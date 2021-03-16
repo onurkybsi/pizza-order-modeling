@@ -15,7 +15,6 @@ import com.google.gson.reflect.TypeToken;
 import com.modelDataProducer.PizzaStore.model.Material;
 import com.modelDataProducer.PizzaStore.model.MenuItem;
 import com.modelDataProducer.PizzaStore.model.Order;
-import com.modelDataProducer.PizzaStore.model.OrderResult;
 import com.modelDataProducer.PizzaStore.model.StoreMetaData;
 import com.modelDataProducer.PizzaStore.model.RequestModel.GetMaterialsByIdsRequest;
 import com.modelDataProducer.PizzaStore.model.RequestModel.GetMenuItemsByIdsRequest;
