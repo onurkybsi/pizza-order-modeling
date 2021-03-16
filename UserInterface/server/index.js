@@ -5,10 +5,10 @@ require("dotenv").config();
 const router = express.Router();
 
 const configureClientAppRoute = (function (_router) {
-  _router.use(express.static(path.join(__dirname, "../client/build")));
+  _router.use(express.static(path.join(__dirname, "./build")));
 
   _router.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "../client/build"));
+    res.sendFile(path.join(__dirname, "./build"));
   });
   _router.get("*", function (req, res) {
     res.redirect("/");
@@ -20,3 +20,4 @@ const app = express()
   .listen(process.env.PORT, () =>
     console.log(`UserInterface app on ${process.env.PORT}`)
   );
+ 
