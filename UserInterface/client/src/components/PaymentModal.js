@@ -61,6 +61,7 @@ export default class PaymentModal extends Component {
         this.handleUnsuccessfulPayment(createOrderResponse.statusText);
       }
     }
+    this.setState({ waitForPayment: false });
   };
 
   validateFormData = () => {
@@ -117,7 +118,7 @@ export default class PaymentModal extends Component {
         nameOnCard: this.state.creditCard.nameOnCard,
         cardNumber: this.state.creditCard.cardNumber,
         expirationMonth: Number(this.state.creditCard.expirationMonth),
-        expirationYear: Number(this.state.creditCard.expirationYear)
+        expirationYear: Number(this.state.creditCard.expirationYear),
       },
       orderedItems: this.props.getOrderedMenuItems(),
     };

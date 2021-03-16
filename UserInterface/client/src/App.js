@@ -68,7 +68,7 @@ export default class App extends Component {
         <React.Fragment>
           <div className="container-fluid">
             <div className="row mt-3">
-              <div className="col-6">
+              <div className="col-6 col-md-6 col-sm-12">
                 <MenuList listHeader="Pizzas">
                   {this.menu.map((item) => {
                     if (item.type !== "PIZZA") return null;
@@ -87,7 +87,7 @@ export default class App extends Component {
                   })}
                 </MenuList>
               </div>
-              <div className="col-6">
+              <div className="col-6 col-md-6 col-sm-12">
                 <MenuList listHeader="Drinks">
                   {this.menu.map((item) => {
                     if (item.type !== "DRINK") return null;

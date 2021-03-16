@@ -39,12 +39,14 @@ export default class MenuItem extends Component {
 
     return (
       <li className="list-group-item d-flex justify-content-between align-items-center">
-        <div className="description">
+        <div className="col">
           <h5>{this.props.item.name}</h5>
           {withMaterials && <small>{materialsText}</small>}
         </div>
-        <h4 style={{ textAlign: "center" }}>{this.props.item.price} $</h4>
-        <div className="button-control d-flex mr-2" style={{ width: "100px" }}>
+        <div className="col align-self-center">
+          <h4 style={{ textAlign: "center" }}>{this.props.item.price} $</h4>
+        </div>
+        <div className="button-control d-flex mr-2">
           <div className="input-group-prepend">
             <button
               id="decrease"
@@ -54,10 +56,13 @@ export default class MenuItem extends Component {
               -
             </button>
           </div>
-          <div className="col-2">
+          <div
+            className="col align-self-center mr-3"
+            style={{ maxWidth: "20px" }}
+          >
             <h4 style={{ textAlign: "center" }}>{this.state.quantity}</h4>
           </div>
-          <div className="input-group-append">
+          <div className="input-group-prepend">
             <button
               id="increase"
               className="btn btn-success"
