@@ -1,0 +1,30 @@
+version: "3.4"
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+    ports:
+      - "9200:9200"
+    environment:
+      # - cluster.name=pizzastore
+      # - bootstrap.memory_lock=true
+      # - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.1
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+  mediator:
+    build: ./Mediator/
+    ports: 
+      - "5000:5000"
+    env_file:
+      - ./Mediator/.env
+    depends_on:
+      - elasticsearch
+      - kibana
