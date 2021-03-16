@@ -5,7 +5,7 @@ require("dotenv").config();
 const router = express.Router();
 
 const configureClientAppRoute = (function (_router) {
-  _router.use(express.static(path.join(__dirname, "../client-app/build")));
+  _router.use(express.static(path.join(__dirname, "../client/build")));
 
   _router.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "../client/build"));
