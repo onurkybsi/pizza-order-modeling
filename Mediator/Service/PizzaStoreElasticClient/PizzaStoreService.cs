@@ -115,5 +115,35 @@ namespace PizzaStore.Service
 
             return response;
         }
+
+        // Its not optimal. It will change
+        public UpdateMaterialsQuantitiesResponse UpdateMaterialsQuantities(UpdateMaterialsQuantitiesRequest request)
+        {
+            if (request is null || request.MaterialsIdsWithQuantities is null | request.MaterialsIdsWithQuantities.Count <= 0)
+                return new UpdateMaterialsQuantitiesResponse { IsSuccess = false, Message = Constants.BadRequestMessage };
+
+            foreach (var materialWithQuantity in request.MaterialsIdsWithQuantities)
+                UpdateMaterialsQuantity(materialWithQuantity.Key, materialWithQuantity.Value);
+
+            return new UpdateMaterialsQuantitiesResponse { IsSuccess = true };
+        }
+
+        private void UpdateMaterialsQuantity(string materialId, int quantity)
+        {
+            var material = _elasticClient.Get<Entity.Material>(materialId, i => i.Index(_configuration["MaterialIndexName"])).Source;
+            material.QuantityInStock = quantity;
+            _elasticClient.Update<Entity.Material>(materialId, i => i.Index(_configuration["MaterialIndexName"]).Doc(material));
+        }
+
+        public StoreOrderDataResponse StoreOrderData(StoreOrderDataRequest request)
+        {
+            if (request is null || request.CreditCardInfo is null | request.OrderedMenuItems is null || request.OrderedMenuItems.Count <= 0)
+                return new StoreOrderDataResponse { IsSuccess = false, Message = Constants.BadRequestMessage };
+
+            Order storedOrderData = request.MapTo<Order>();
+
+            var stordeDataElasticResponse = _elasticClient.Index(storedOrderData, i => i.Index(_configuration["OrderIndexName"]));
+            return new StoreOrderDataResponse { IsSuccess = stordeDataElasticResponse.IsValid, Message = stordeDataElasticResponse.OriginalException.Message };
+        }
     }
 }

@@ -1,10 +1,13 @@
-package com.modelDataProducer.PizzaStore.model;
+package com.modelDataProducer.PizzaStore.model.ResponseModel;
 
-public class OrderResult {
+public class BaseResponse {
     private boolean isSuccess;
     private String message;
 
-    public OrderResult(boolean isSuccess, String message) {
+    public BaseResponse() {
+    }
+
+    public BaseResponse(boolean isSuccess, String message) {
         this.isSuccess = isSuccess;
         this.message = message;
     }

@@ -1,12 +1,11 @@
 package com.modelDataProducer.PizzaStore.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.modelDataProducer.PizzaStore.model.Material;
 import com.modelDataProducer.PizzaStore.model.MenuItem;
 import com.modelDataProducer.PizzaStore.model.Order;
 import com.modelDataProducer.PizzaStore.model.OrderResult;
+import com.modelDataProducer.PizzaStore.model.ResponseModel.BaseResponse;
 import com.modelDataProducer.PizzaStore.service.MediatorClient.MediatorClient;
 import com.modelDataProducer.PizzaStore.service.OrderService.OrderService;
 
@@ -38,22 +37,8 @@ public class PizzaOrderController {
         return mediatorClient.getMenu();
     }
 
-    @GetMapping("/getMaterials")
-    public List<Material> getMaterials() {
-        return mediatorClient.getMaterials();
-    }
-
     @PostMapping("/createOrder")
-    public OrderResult creatOrder(@RequestBody Order order) {
-        orderService.creatOrder(order);
-
-        OrderResult result = new OrderResult(true, "TEST");
-        return result;
-    }
-
-    @GetMapping("/test")
-    public List<Material> test() {
-        orderService.creatOrder(new Order());
-        return new ArrayList<Material>();
+    public BaseResponse creatOrder(@RequestBody Order order) {
+        return orderService.creatOrder(order);
     }
 }

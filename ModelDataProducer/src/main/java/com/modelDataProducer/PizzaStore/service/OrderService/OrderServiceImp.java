@@ -13,8 +13,12 @@ import com.modelDataProducer.PizzaStore.model.MenuItem;
 import com.modelDataProducer.PizzaStore.model.MenuItemRequiredMaterial;
 import com.modelDataProducer.PizzaStore.model.MenuItemType;
 import com.modelDataProducer.PizzaStore.model.Order;
-import com.modelDataProducer.PizzaStore.model.OrderResult;
+import com.modelDataProducer.PizzaStore.model.ResponseModel.BaseResponse;
 import com.modelDataProducer.PizzaStore.model.OrderedMenuItem;
+import com.modelDataProducer.PizzaStore.model.RequestModel.UpdateMaterialsQuantitiesRequest;
+import com.modelDataProducer.PizzaStore.model.RequestModel.UpdateStoreBudgetRequest;
+import com.modelDataProducer.PizzaStore.model.ResponseModel.UpdateMaterialsQuantitiesResponse;
+import com.modelDataProducer.PizzaStore.model.ResponseModel.UpdateStoreBudgetResponse;
 import com.modelDataProducer.PizzaStore.service.MediatorClient.MediatorClient;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OrderServiceImp implements OrderService {
+    private static final String SOMETHING_WENT_WRONG_MESSAGE = "SOMETHING_WENT_WRONG";
+    private static final String ORDER_IS_SUCCESSFUL_MESSAGE = "ORDER_IS_SUCCESSFUL";
+
     @Autowired
     private MediatorClient mediatorClient;
 
@@ -30,7 +37,7 @@ public class OrderServiceImp implements OrderService {
     }
 
     @Override
-    public OrderResult creatOrder(Order order) {
+    public BaseResponse creatOrder(Order order) {
         List<MenuItem> orderedMenuItemsInDetails = getMenuItemsInDetails(order.getOrderedItems());
         Map<String, Integer> requiredMaterialsQuantity = getRequiredMaterialsWithQuantities(order.getOrderedItems(),
                 orderedMenuItemsInDetails);
@@ -44,19 +51,8 @@ public class OrderServiceImp implements OrderService {
         Map<String, BigDecimal> missingMaterialsCost = getMissingMaterialsCost(materialsQuantitiesAfterOrdering,
                 requiredMaterialsOfOrderedMenuItemsInDetails);
 
-        BigDecimal storeBudget = new BigDecimal(100);
-        storeBudget = storeBudget.add(getOrderIncome(order.getOrderedItems(), orderedMenuItemsInDetails));
-        if (missingMaterialsCost.size() > 0) {
-            prepareMaterialsAfterOrderingByMissingMaterials(materialsQuantitiesAfterOrdering, missingMaterialsCost);
-            storeBudget = storeBudget.subtract(getExpensesToBeSubtractFromBudget(missingMaterialsCost));
-        }
-
-        // update materials stock
-
-        // update budget
-        // store order data
-
-        return new OrderResult(true, "");
+        return completeOrderWithDataUpdates(order, orderedMenuItemsInDetails, materialsQuantitiesAfterOrdering,
+                missingMaterialsCost);
     }
 
     private List<MenuItem> getMenuItemsInDetails(List<OrderedMenuItem> orderedMenuItemsToBeInDetails) {
@@ -191,5 +187,38 @@ public class OrderServiceImp implements OrderService {
             expensesToBeSubstracted = subtractExpense.add(subtractExpense);
         }
         return expensesToBeSubstracted;
+    }
+
+    private BaseResponse completeOrderWithDataUpdates(Order order, List<MenuItem> orderedMenuItemsInDetails,
+            Map<String, Integer> materialsQuantitiesAfterOrdering, Map<String, BigDecimal> missingMaterialsCost) {
+
+        // getBudget from mediator
+        BigDecimal storeBudget = new BigDecimal(100);
+        storeBudget = storeBudget.add(getOrderIncome(order.getOrderedItems(), orderedMenuItemsInDetails));
+        if (missingMaterialsCost.size() > 0) {
+            prepareMaterialsAfterOrderingByMissingMaterials(materialsQuantitiesAfterOrdering, missingMaterialsCost);
+            storeBudget = storeBudget.subtract(getExpensesToBeSubtractFromBudget(missingMaterialsCost));
+        }
+
+        UpdateMaterialsQuantitiesResponse updateMaterialsQuantitiesResponse = mediatorClient
+                .updateMaterialsQuantities(new UpdateMaterialsQuantitiesRequest(materialsQuantitiesAfterOrdering));
+        if (!updateMaterialsQuantitiesResponse.isIsSuccess()) {
+            return new BaseResponse(false, SOMETHING_WENT_WRONG_MESSAGE);
+        }
+
+        // Transaction must be rollback in the above
+        UpdateStoreBudgetResponse updateStoreBudgetResponse = mediatorClient
+                .updateStoreBudget(new UpdateStoreBudgetRequest(storeBudget));
+        if (!updateStoreBudgetResponse.isIsSuccess()) {
+            return new BaseResponse(false, SOMETHING_WENT_WRONG_MESSAGE);
+        }
+
+        // Transaction must be rollback in the above
+        BaseResponse storeOrderDataResponse = mediatorClient.storeOrderData(order);
+        if (!storeOrderDataResponse.isIsSuccess()) {
+            return new BaseResponse(false, SOMETHING_WENT_WRONG_MESSAGE);
+        }
+
+        return new BaseResponse(true, ORDER_IS_SUCCESSFUL_MESSAGE);
     }
 }

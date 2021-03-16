@@ -17,15 +17,7 @@ namespace PizzaStore.Controller
 
         [HttpGet]
         public IActionResult GetMenu()
-        {
-            return Ok(_pizzaStoreService.GetMenu());
-        }
-
-        [HttpGet]
-        public IActionResult GetMaterials()
-        {
-            return Ok(_pizzaStoreService.GetMaterials());
-        }
+            => Ok(_pizzaStoreService.GetMenu());
 
         [HttpGet]
         public IActionResult GetMenuItemsByIds([FromQuery] GetMenuItemsByIdsRequest request)
@@ -37,6 +29,10 @@ namespace PizzaStore.Controller
         }
 
         [HttpGet]
+        public IActionResult GetMaterials()
+            => Ok(_pizzaStoreService.GetMaterials());
+
+        [HttpGet]
         public IActionResult GetMaterialsByIds([FromQuery] GetMaterialsByIdsRequest request)
         {
             if (request is null)
@@ -45,11 +41,18 @@ namespace PizzaStore.Controller
             return Ok(_pizzaStoreService.GetMaterialsByIds(request));
         }
 
+        [HttpPost]
+        public IActionResult UpdateMaterialsQuantities([FromQuery] UpdateMaterialsQuantitiesRequest request)
+        {
+            if (request is null)
+                return BadRequest();
+
+            return Ok(_pizzaStoreService.UpdateMaterialsQuantities(request));
+        }
+
         [HttpGet]
         public IActionResult GetStoreBudget()
-        {
-            return Ok(_pizzaStoreService.GetStoreBudget());
-        }
+            => Ok(_pizzaStoreService.GetStoreBudget());
 
         [HttpPost]
         public ActionResult UpdateStoreBudget(UpdateStoreBudgetRequest request)
@@ -63,10 +66,12 @@ namespace PizzaStore.Controller
         }
 
         [HttpPost]
-        public IActionResult CreateOrder()
+        public IActionResult StoreOrderData(StoreOrderDataRequest request)
         {
-            // TO-DO
-            return Ok();
+            if (request is null)
+                return BadRequest();
+
+            return Ok(_pizzaStoreService.StoreOrderData(request));
         }
     }
 }

@@ -7,6 +7,6 @@ namespace PizzaStore.Model.Entity
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public CreditCard CreditCard { get; set; }
-        public List<MenuItem> OrderedItems { get; set; }
+        public List<OrderedMenuItem> OrderedItems { get; set; }
     }
 }

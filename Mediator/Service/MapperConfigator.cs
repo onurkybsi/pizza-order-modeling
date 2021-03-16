@@ -1,5 +1,6 @@
 using System;
 using AutoMapper;
+using PizzaStore.Model;
 using Business = PizzaStore.Model.Business;
 using Entity = PizzaStore.Model.Entity;
 
@@ -21,6 +22,8 @@ namespace PizzaStore.Service
 
                 cfg.CreateMap<Business.StoreMetaData, Entity.StoreMetaData>()
                 .ForMember(d => d.Value, opt => opt.MapFrom(u => u.Value.ToString()));
+
+                cfg.CreateMap<StoreOrderDataRequest, Entity.Order>();
             }
         ));
 

@@ -1,23 +1,25 @@
 package com.modelDataProducer.PizzaStore.model.RequestModel;
 
-public class UpdateStoreBudgetRequest {
-    private int amount;
+import java.math.BigDecimal;
 
-    public UpdateStoreBudgetRequest(int amount) {
+public class UpdateStoreBudgetRequest {
+    private BigDecimal amount;
+
+    public UpdateStoreBudgetRequest(BigDecimal amount) {
         this.amount = amount;
     }
 
     /**
-     * @return int return the amount
+     * @return BigDecimal return the amount
      */
-    public int getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
     /**
      * @param amount the amount to set
      */
-    public void setAmount(int amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

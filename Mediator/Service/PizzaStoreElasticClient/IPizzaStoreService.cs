@@ -12,5 +12,7 @@ namespace PizzaStore.Service
         List<Material> GetMaterialsByIds(GetMaterialsByIdsRequest request);
         StoreMetaData GetStoreBudget();
         UpdateStoreBudgetResponse UpdateStoreBudget(UpdateStoreBudgetRequest request);
+        UpdateMaterialsQuantitiesResponse UpdateMaterialsQuantities(UpdateMaterialsQuantitiesRequest request);
+        StoreOrderDataResponse StoreOrderData(StoreOrderDataRequest request);
     }
 }

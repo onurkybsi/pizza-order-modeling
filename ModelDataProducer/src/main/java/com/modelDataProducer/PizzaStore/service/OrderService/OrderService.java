@@ -1,8 +1,8 @@
 package com.modelDataProducer.PizzaStore.service.OrderService;
 
 import com.modelDataProducer.PizzaStore.model.Order;
-import com.modelDataProducer.PizzaStore.model.OrderResult;
+import com.modelDataProducer.PizzaStore.model.ResponseModel.BaseResponse;
 
 public interface OrderService {
-    OrderResult creatOrder(Order order);
+    BaseResponse creatOrder(Order order);
 }

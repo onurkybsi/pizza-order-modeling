@@ -5,17 +5,17 @@ import java.util.List;
 import com.modelDataProducer.PizzaStore.model.Material;
 import com.modelDataProducer.PizzaStore.model.MenuItem;
 import com.modelDataProducer.PizzaStore.model.Order;
-import com.modelDataProducer.PizzaStore.model.OrderResult;
 import com.modelDataProducer.PizzaStore.model.StoreMetaData;
+import com.modelDataProducer.PizzaStore.model.RequestModel.UpdateMaterialsQuantitiesRequest;
 import com.modelDataProducer.PizzaStore.model.RequestModel.UpdateStoreBudgetRequest;
-import com.modelDataProducer.PizzaStore.model.ResponseModel.UpdateStoreBudgetRespose;
+import com.modelDataProducer.PizzaStore.model.ResponseModel.BaseResponse;
+import com.modelDataProducer.PizzaStore.model.ResponseModel.UpdateMaterialsQuantitiesResponse;
+import com.modelDataProducer.PizzaStore.model.ResponseModel.UpdateStoreBudgetResponse;
 
 public interface MediatorClient {
     List<MenuItem> getMenu();
 
     List<Material> getMaterials();
-
-    OrderResult createOrder(Order order);
 
     List<MenuItem> getMenuItemsByIds(List<String> ids);
 
@@ -23,5 +23,9 @@ public interface MediatorClient {
 
     StoreMetaData getStoreBudget();
 
-    UpdateStoreBudgetRespose updateStoreBudget(UpdateStoreBudgetRequest request);
+    UpdateStoreBudgetResponse updateStoreBudget(UpdateStoreBudgetRequest request);
+
+    UpdateMaterialsQuantitiesResponse updateMaterialsQuantities(UpdateMaterialsQuantitiesRequest request);
+
+    BaseResponse storeOrderData(Order order);
 }
