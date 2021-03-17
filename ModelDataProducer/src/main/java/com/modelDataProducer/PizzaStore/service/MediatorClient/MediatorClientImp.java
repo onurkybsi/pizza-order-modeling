@@ -54,7 +54,7 @@ public class MediatorClientImp implements MediatorClient {
 
     private HttpClient client;
 
-    private MediatorClientImp() {
+    public MediatorClientImp() {
         this.client = HttpClient.newHttpClient();
     }
 

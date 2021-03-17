@@ -5,7 +5,7 @@ import java.util.List;
 import com.modelDataProducer.PizzaStore.model.MenuItem;
 import com.modelDataProducer.PizzaStore.model.Order;
 import com.modelDataProducer.PizzaStore.model.ResponseModel.BaseResponse;
-import com.modelDataProducer.PizzaStore.service.OrderService.PizzaStoreService;
+import com.modelDataProducer.PizzaStore.service.PizzaStoreService.PizzaStoreService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
