@@ -3,35 +3,34 @@ package com.modelDataProducer.PizzaStore.model;
 import java.util.List;
 
 public class Order {
-    private CreditCard creditCard;
-    private List<OrderedMenuItem> orderedItems;
+    private CreditCard creditCardInfo;
+    private List<OrderedMenuItem> orderedMenuItems;
 
     /**
-     * @return CreditCard return the creditCard
+     * @return CreditCard return the creditCardInfo
      */
-    public CreditCard getCreditCard() {
-        return creditCard;
+    public CreditCard getCreditCardInfo() {
+        return creditCardInfo;
     }
 
     /**
-     * @param creditCard the creditCard to set
+     * @param creditCardInfo the creditCardInfo to set
      */
-    public void setCreditCard(CreditCard creditCard) {
-        this.creditCard = creditCard;
+    public void setCreditCardInfo(CreditCard creditCardInfo) {
+        this.creditCardInfo = creditCardInfo;
     }
 
     /**
-     * @return List<OrderedMenuItem> return the orderedItems
+     * @return List<OrderedMenuItem> return the orderedMenuItems
      */
-    public List<OrderedMenuItem> getOrderedItems() {
-        return orderedItems;
+    public List<OrderedMenuItem> getOrderedMenuItems() {
+        return orderedMenuItems;
     }
 
     /**
-     * @param orderedItems the orderedItems to set
+     * @param orderedMenuItems the orderedMenuItems to set
      */
-    public void setOrderedItems(List<OrderedMenuItem> orderedItems) {
-        this.orderedItems = orderedItems;
+    public void setOrderedMenuItems(List<OrderedMenuItem> orderedMenuItems) {
+        this.orderedMenuItems = orderedMenuItems;
     }
-
 }

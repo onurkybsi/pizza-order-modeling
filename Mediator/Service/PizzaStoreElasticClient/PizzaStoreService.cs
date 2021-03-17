@@ -30,15 +30,6 @@ namespace PizzaStore.Service
             return menu;
         }
 
-        public List<Business.Material> GetMaterials()
-        {
-            var searchResponse = _elasticClient.Search<Entity.Material>(s => s.Index(_configuration["MaterialIndexName"]).Query(q => q.MatchAll()));
-
-            List<Business.Material> materials = searchResponse?.Documents?.MapTo<List<Business.Material>>() ?? new List<Business.Material>();
-
-            return materials;
-        }
-
         public List<Business.MenuItem> GetMenuItemsByIds(GetMenuItemsByIdsRequest request)
         {
             if (request is null || request.MenuItemIds is null || request.MenuItemIds.Count <= 0)
@@ -59,6 +50,15 @@ namespace PizzaStore.Service
             List<Business.MenuItem> menuItems = searchResponse?.Documents?.MapTo<List<Business.MenuItem>>() ?? new List<Business.MenuItem>();
 
             return menuItems;
+        }
+
+        public List<Business.Material> GetMaterials()
+        {
+            var searchResponse = _elasticClient.Search<Entity.Material>(s => s.Index(_configuration["MaterialIndexName"]).Query(q => q.MatchAll()));
+
+            List<Business.Material> materials = searchResponse?.Documents?.MapTo<List<Business.Material>>() ?? new List<Business.Material>();
+
+            return materials;
         }
 
         public List<Business.Material> GetMaterialsByIds(GetMaterialsByIdsRequest request)
@@ -119,7 +119,7 @@ namespace PizzaStore.Service
         // Its not optimal. It will change
         public UpdateMaterialsQuantitiesResponse UpdateMaterialsQuantities(UpdateMaterialsQuantitiesRequest request)
         {
-            if (request is null || request.MaterialsIdsWithQuantities is null | request.MaterialsIdsWithQuantities.Count <= 0)
+            if (request is null || request.MaterialsIdsWithQuantities is null | request.MaterialsIdsWithQuantities.Count() <= 0)
                 return new UpdateMaterialsQuantitiesResponse { IsSuccess = false, Message = Constants.BadRequestMessage };
 
             foreach (var materialWithQuantity in request.MaterialsIdsWithQuantities)
@@ -137,13 +137,11 @@ namespace PizzaStore.Service
 
         public StoreOrderDataResponse StoreOrderData(StoreOrderDataRequest request)
         {
-            if (request is null || request.CreditCardInfo is null | request.OrderedMenuItems is null || request.OrderedMenuItems.Count <= 0)
+            if (request is null || request.OrderInfo is null | request.OrderInfo.CreditCardInfo is null || request.OrderInfo.OrderedMenuItems is null || request.OrderInfo.OrderedMenuItems.Count <= 0)
                 return new StoreOrderDataResponse { IsSuccess = false, Message = Constants.BadRequestMessage };
 
-            Order storedOrderData = request.MapTo<Order>();
-
-            var stordeDataElasticResponse = _elasticClient.Index(storedOrderData, i => i.Index(_configuration["OrderIndexName"]));
-            return new StoreOrderDataResponse { IsSuccess = stordeDataElasticResponse.IsValid, Message = stordeDataElasticResponse.OriginalException.Message };
+            var stordeDataElasticResponse = _elasticClient.Index(request.OrderInfo, i => i.Index(_configuration["OrderIndexName"]));
+            return new StoreOrderDataResponse { IsSuccess = stordeDataElasticResponse.IsValid, Message = stordeDataElasticResponse?.OriginalException?.Message };
         }
     }
 }

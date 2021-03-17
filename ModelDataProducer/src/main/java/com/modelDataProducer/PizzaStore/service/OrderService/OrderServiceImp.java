@@ -15,6 +15,7 @@ import com.modelDataProducer.PizzaStore.model.MenuItemType;
 import com.modelDataProducer.PizzaStore.model.Order;
 import com.modelDataProducer.PizzaStore.model.ResponseModel.BaseResponse;
 import com.modelDataProducer.PizzaStore.model.OrderedMenuItem;
+import com.modelDataProducer.PizzaStore.model.StoreMetaData;
 import com.modelDataProducer.PizzaStore.model.RequestModel.UpdateMaterialsQuantitiesRequest;
 import com.modelDataProducer.PizzaStore.model.RequestModel.UpdateStoreBudgetRequest;
 import com.modelDataProducer.PizzaStore.model.ResponseModel.UpdateMaterialsQuantitiesResponse;
@@ -38,8 +39,8 @@ public class OrderServiceImp implements OrderService {
 
     @Override
     public BaseResponse creatOrder(Order order) {
-        List<MenuItem> orderedMenuItemsInDetails = getMenuItemsInDetails(order.getOrderedItems());
-        Map<String, Integer> requiredMaterialsQuantity = getRequiredMaterialsWithQuantities(order.getOrderedItems(),
+        List<MenuItem> orderedMenuItemsInDetails = getMenuItemsInDetails(order.getOrderedMenuItems());
+        Map<String, Integer> requiredMaterialsQuantity = getRequiredMaterialsWithQuantities(order.getOrderedMenuItems(),
                 orderedMenuItemsInDetails);
 
         List<Material> requiredMaterialsOfOrderedMenuItemsInDetails = getMaterialsOfMenuItemsInDetails(
@@ -193,8 +194,8 @@ public class OrderServiceImp implements OrderService {
             Map<String, Integer> materialsQuantitiesAfterOrdering, Map<String, BigDecimal> missingMaterialsCost) {
 
         // getBudget from mediator
-        BigDecimal storeBudget = new BigDecimal(100);
-        storeBudget = storeBudget.add(getOrderIncome(order.getOrderedItems(), orderedMenuItemsInDetails));
+        BigDecimal storeBudget = getStoreBudget();
+        storeBudget = storeBudget.add(getOrderIncome(order.getOrderedMenuItems(), orderedMenuItemsInDetails));
         if (missingMaterialsCost.size() > 0) {
             prepareMaterialsAfterOrderingByMissingMaterials(materialsQuantitiesAfterOrdering, missingMaterialsCost);
             storeBudget = storeBudget.subtract(getExpensesToBeSubtractFromBudget(missingMaterialsCost));
@@ -220,5 +221,11 @@ public class OrderServiceImp implements OrderService {
         }
 
         return new BaseResponse(true, ORDER_IS_SUCCESSFUL_MESSAGE);
+    }
+
+    private BigDecimal getStoreBudget() {
+        StoreMetaData budgetData = mediatorClient.getStoreBudget();
+        return budgetData != null ? new BigDecimal(budgetData.getValue().toString().replace(',', '.'))
+                : BigDecimal.ZERO;
     }
 }

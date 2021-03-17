@@ -7,8 +7,8 @@ namespace PizzaStore.Service
     public interface IPizzaStoreService
     {
         List<MenuItem> GetMenu();
-        List<Material> GetMaterials();
         List<MenuItem> GetMenuItemsByIds(GetMenuItemsByIdsRequest request);
+        List<Material> GetMaterials();
         List<Material> GetMaterialsByIds(GetMaterialsByIdsRequest request);
         StoreMetaData GetStoreBudget();
         UpdateStoreBudgetResponse UpdateStoreBudget(UpdateStoreBudgetRequest request);

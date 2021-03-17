@@ -5,7 +5,7 @@ public class CreditCard {
     private long cardNumber;
     private int expirationMonth;
     private int expirationYear;
-    private byte cVV;
+    private int cVV;
 
     /**
      * @return String return the nameOnCard
@@ -64,16 +64,16 @@ public class CreditCard {
     }
 
     /**
-     * @return byte return the cVV
+     * @return int return the cVV
      */
-    public byte getCVV() {
+    public int getCVV() {
         return cVV;
     }
 
     /**
      * @param cVV the cVV to set
      */
-    public void setCVV(byte cVV) {
+    public void setCVV(int cVV) {
         this.cVV = cVV;
     }
 

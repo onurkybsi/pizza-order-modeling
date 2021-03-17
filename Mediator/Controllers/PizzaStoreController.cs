@@ -42,7 +42,7 @@ namespace PizzaStore.Controller
         }
 
         [HttpPost]
-        public IActionResult UpdateMaterialsQuantities([FromQuery] UpdateMaterialsQuantitiesRequest request)
+        public IActionResult UpdateMaterialsQuantities([FromBody] UpdateMaterialsQuantitiesRequest request)
         {
             if (request is null)
                 return BadRequest();
@@ -55,7 +55,7 @@ namespace PizzaStore.Controller
             => Ok(_pizzaStoreService.GetStoreBudget());
 
         [HttpPost]
-        public ActionResult UpdateStoreBudget(UpdateStoreBudgetRequest request)
+        public ActionResult UpdateStoreBudget([FromBody] UpdateStoreBudgetRequest request)
         {
             if (request is null)
                 return BadRequest();
@@ -66,7 +66,7 @@ namespace PizzaStore.Controller
         }
 
         [HttpPost]
-        public IActionResult StoreOrderData(StoreOrderDataRequest request)
+        public IActionResult StoreOrderData([FromBody] StoreOrderDataRequest request)
         {
             if (request is null)
                 return BadRequest();

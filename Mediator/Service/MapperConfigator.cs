@@ -23,7 +23,7 @@ namespace PizzaStore.Service
                 cfg.CreateMap<Business.StoreMetaData, Entity.StoreMetaData>()
                 .ForMember(d => d.Value, opt => opt.MapFrom(u => u.Value.ToString()));
 
-                cfg.CreateMap<StoreOrderDataRequest, Entity.Order>();
+                cfg.CreateMap<Entity.StoreMetaData, Business.StoreMetaData>();
             }
         ));
 

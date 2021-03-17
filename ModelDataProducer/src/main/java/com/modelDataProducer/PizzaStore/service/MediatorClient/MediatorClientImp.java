@@ -9,6 +9,8 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.print.DocFlavor.STRING;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -18,9 +20,11 @@ import com.modelDataProducer.PizzaStore.model.Order;
 import com.modelDataProducer.PizzaStore.model.StoreMetaData;
 import com.modelDataProducer.PizzaStore.model.RequestModel.GetMaterialsByIdsRequest;
 import com.modelDataProducer.PizzaStore.model.RequestModel.GetMenuItemsByIdsRequest;
+import com.modelDataProducer.PizzaStore.model.RequestModel.StoreOrderDataRequest;
 import com.modelDataProducer.PizzaStore.model.RequestModel.UpdateMaterialsQuantitiesRequest;
 import com.modelDataProducer.PizzaStore.model.RequestModel.UpdateStoreBudgetRequest;
 import com.modelDataProducer.PizzaStore.model.ResponseModel.BaseResponse;
+import com.modelDataProducer.PizzaStore.model.ResponseModel.StoreOrderDataResponse;
 import com.modelDataProducer.PizzaStore.model.ResponseModel.UpdateMaterialsQuantitiesResponse;
 import com.modelDataProducer.PizzaStore.model.ResponseModel.UpdateStoreBudgetResponse;
 
@@ -45,9 +49,11 @@ public class MediatorClientImp implements MediatorClient {
     @Value("${UPDATE_STORE_BUDGET_ENDPOINT}")
     private String updateStoreBudgetEndPoint;
     @Value("${UPDATE_MATERIALS_QUANTITIES_ENDPOINT}")
-    private String updateMaterialsQuantitesEndPoint;
+    private String updateMaterialsQuantitiesEndPoint;
     @Value("${STORE_ORDER_DATA_ENDPOINT}")
     private String storeOrderDataEndPoint;
+
+    private static final String APP_JSON_HEADER_VAL = "application/json";
 
     private HttpClient client;
 
@@ -94,7 +100,7 @@ public class MediatorClientImp implements MediatorClient {
     private HttpRequest createGetMediatorRequest(String endpoint) {
         String requestURL = mediatorBaseURL + endpoint;
 
-        return HttpRequest.newBuilder().uri(URI.create(requestURL)).header("Accept", "application/json").build();
+        return HttpRequest.newBuilder().uri(URI.create(requestURL)).header("Accept", APP_JSON_HEADER_VAL).build();
     }
 
     @Override
@@ -199,14 +205,15 @@ public class MediatorClientImp implements MediatorClient {
         String requestBodyString = "";
 
         try {
-            objectMapper.writeValueAsString(requestBody);
+            requestBodyString = objectMapper.writeValueAsString(requestBody);
         } catch (Exception e) {
             // TODO: handle exception
         }
 
         String requestedUrl = mediatorBaseURL + endpoint;
 
-        return HttpRequest.newBuilder().uri(URI.create(requestedUrl))
+        return HttpRequest.newBuilder().uri(URI.create(requestedUrl)).header("Accept", APP_JSON_HEADER_VAL)
+                .header("Content-Type", APP_JSON_HEADER_VAL)
                 .POST(HttpRequest.BodyPublishers.ofString(requestBodyString)).build();
     }
 
@@ -215,12 +222,13 @@ public class MediatorClientImp implements MediatorClient {
         UpdateMaterialsQuantitiesResponse updateMaterialsQuantitiesResponse = new UpdateMaterialsQuantitiesResponse();
 
         HttpRequest updateMaterialsQuantitiesRequest = createMediatorPostRequest(request,
-                updateMaterialsQuantitesEndPoint);
+                updateMaterialsQuantitiesEndPoint);
 
         try {
-            HttpResponse<String> response = client.send(updateMaterialsQuantitiesRequest, BodyHandlers.ofString());
+            HttpResponse<String> response = client.send(updateMaterialsQuantitiesRequest,
+                    HttpResponse.BodyHandlers.ofString());
             updateMaterialsQuantitiesResponse = convertJsonStringToGivenTypeObject(
-                    new TypeToken<UpdateStoreBudgetResponse>() {
+                    new TypeToken<UpdateMaterialsQuantitiesResponse>() {
                     }.getType(), response.body());
         } catch (Exception e) {
             // TODO: handle exception
@@ -230,14 +238,15 @@ public class MediatorClientImp implements MediatorClient {
     }
 
     @Override
-    public BaseResponse storeOrderData(Order order) {
-        BaseResponse storeOrderDataResponse = new UpdateMaterialsQuantitiesResponse();
+    public StoreOrderDataResponse storeOrderData(Order order) {
+        StoreOrderDataResponse storeOrderDataResponse = new StoreOrderDataResponse();
 
-        HttpRequest storeOrderDataRequest = createMediatorPostRequest(order, storeOrderDataEndPoint);
+        HttpRequest storeOrderDataRequest = createMediatorPostRequest(new StoreOrderDataRequest(order),
+                storeOrderDataEndPoint);
 
         try {
             HttpResponse<String> response = client.send(storeOrderDataRequest, BodyHandlers.ofString());
-            storeOrderDataResponse = convertJsonStringToGivenTypeObject(new TypeToken<UpdateStoreBudgetResponse>() {
+            storeOrderDataResponse = convertJsonStringToGivenTypeObject(new TypeToken<StoreOrderDataResponse>() {
             }.getType(), response.body());
         } catch (Exception e) {
             // TODO: handle exception
