@@ -1,9 +1,12 @@
 import React, { Component } from "react";
 import { Modal, Button } from "react-bootstrap";
 import configuration from "../configuration.json";
-import axios from "axios";
+import { create as createAxiosInstance } from "axios";
 
-const createOrderURL = `${configuration.ModelProducerBaseURL}${configuration.ModelProducerCreateOrderEndPoint}`;
+const axiosInstance = createAxiosInstance({
+  baseURL: configuration.ModelProducerBaseURL,
+  timeout: 5000,
+});
 
 export default class PaymentModal extends Component {
   constructor(props) {
@@ -15,6 +18,7 @@ export default class PaymentModal extends Component {
         cardNumber: "",
         expirationMonth: "1",
         expirationYear: "2022",
+        cvv: "",
       },
       showPaymentMessage: false,
       paymentMessageIsError: false,
@@ -55,10 +59,10 @@ export default class PaymentModal extends Component {
       let createOrderResponse = await this.sendCreateOrderRequest(
         createOrderRequest
       );
-      if (this.checkResponseIsSuccess(createOrderResponse.status)) {
-        this.handleSuccessfulPayment(createOrderResponse.data.message);
+      if (this.checkResponseIsSuccess(createOrderResponse)) {
+        this.handleSuccessfulPayment(configuration.SuccessfulOrderMessage);
       } else {
-        this.handleUnsuccessfulPayment(createOrderResponse.statusText);
+        this.handleUnsuccessfulPayment(configuration.ErrorMessage);
       }
     }
     this.setState({ waitForPayment: false });
@@ -68,7 +72,7 @@ export default class PaymentModal extends Component {
     let validationResult = { isValid: true, message: "" };
     if (this.state.creditCard.nameOnCard === "") {
       validationResult.isValid = false;
-      validationResult.message = "Please enter valid cart owner name !";
+      validationResult.message = configuration.INVALID_CARD_OWNER_NAME_MESSAGE;
       return validationResult;
     }
     if (
@@ -76,7 +80,15 @@ export default class PaymentModal extends Component {
       this.state.creditCard.cardNumber.length < 16
     ) {
       validationResult.isValid = false;
-      validationResult.message = "Please enter valid cart number !";
+      validationResult.message = configuration.INVALID_CARD_NUMBER_MESSAGE;
+      return validationResult;
+    }
+    if (
+      this.state.creditCard.cvv === "" ||
+      this.state.creditCard.cvv.length < 3
+    ) {
+      validationResult.isValid = false;
+      validationResult.message = configuration.INVALID_CVV_MESSAGE;
       return validationResult;
     }
     return validationResult;
@@ -114,26 +126,30 @@ export default class PaymentModal extends Component {
 
   getCreateOrderRequest = () => {
     return {
-      creditCard: {
+      creditCardInfo: {
         nameOnCard: this.state.creditCard.nameOnCard,
         cardNumber: this.state.creditCard.cardNumber,
         expirationMonth: Number(this.state.creditCard.expirationMonth),
         expirationYear: Number(this.state.creditCard.expirationYear),
+        cvv: Number(this.state.creditCard.cvv),
       },
-      orderedItems: this.props.getOrderedMenuItems(),
+      orderedMenuItems: this.props.getOrderedMenuItems(),
     };
   };
 
   sendCreateOrderRequest = async (createOrderRequest) => {
-    let createOrderResponse = await axios.post(
-      createOrderURL,
+    let createOrderResponse = await axiosInstance.post(
+      configuration.ModelProducerCreateOrderEndPoint,
       createOrderRequest
     );
     return createOrderResponse;
   };
 
-  checkResponseIsSuccess = (status) => {
-    return status >= 200 || status < 300;
+  checkResponseIsSuccess = (createOrderResponse) => {
+    return (
+      (createOrderResponse.status >= 200 || createOrderResponse.status < 300) &&
+      createOrderResponse.data.isSuccess
+    );
   };
 
   handleInputChange = (e, onlyNumber = false, validateValue = undefined) => {
@@ -222,6 +238,22 @@ export default class PaymentModal extends Component {
                   return <option key={value}>{value}</option>;
                 })}
               </select>
+            </div>
+            <div className="form-group">
+              <label>CVV</label>
+              <input
+                id="cvv"
+                className="form-control"
+                placeholder="123"
+                value={this.state.creditCard.cvv}
+                onChange={(e) =>
+                  this.handleInputChange(
+                    e,
+                    true,
+                    () => e.target.value.length <= 3
+                  )
+                }
+              />
             </div>
           </form>
         </Modal.Body>

@@ -2,5 +2,10 @@
   "ModelProducerBaseURL": "http://localhost:8080/api",
   "ModelProducerGetMenuEndPoint": "/getMenu",
   "ModelProducerGetMaterialsEndPoint": "/getMaterials",
-  "ModelProducerCreateOrderEndPoint": "/createOrder"
+  "ModelProducerCreateOrderEndPoint": "/createOrder",
+  "ErrorMessage": "We are closed, we wait again later :)",
+  "SuccessfulOrderMessage": "Your pizza is ready soon!",
+  "INVALID_CARD_OWNER_NAME_MESSAGE": "Please enter valid card owner name !",
+  "INVALID_CARD_NUMBER_MESSAGE": "Please enter valid card number !",
+  "INVALID_CVV_MESSAGE": "Please enter valid CVV !"
 }

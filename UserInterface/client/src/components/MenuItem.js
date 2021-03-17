@@ -22,6 +22,7 @@ export default class MenuItem extends Component {
         this.props.setItemInfoToOrder({
           id: this.props.item.id,
           quantity: this.state.quantity,
+          price: this.props.item.price,
         })
     );
   };

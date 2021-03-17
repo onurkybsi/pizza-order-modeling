@@ -9,8 +9,6 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.print.DocFlavor.STRING;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -23,7 +21,6 @@ import com.modelDataProducer.PizzaStore.model.RequestModel.GetMenuItemsByIdsRequ
 import com.modelDataProducer.PizzaStore.model.RequestModel.StoreOrderDataRequest;
 import com.modelDataProducer.PizzaStore.model.RequestModel.UpdateMaterialsQuantitiesRequest;
 import com.modelDataProducer.PizzaStore.model.RequestModel.UpdateStoreBudgetRequest;
-import com.modelDataProducer.PizzaStore.model.ResponseModel.BaseResponse;
 import com.modelDataProducer.PizzaStore.model.ResponseModel.StoreOrderDataResponse;
 import com.modelDataProducer.PizzaStore.model.ResponseModel.UpdateMaterialsQuantitiesResponse;
 import com.modelDataProducer.PizzaStore.model.ResponseModel.UpdateStoreBudgetResponse;

@@ -16,6 +16,7 @@ export default class App extends Component {
       loading: true,
       showPaymentModal: false,
       orderedMenuItems: {},
+      totalAmount: 0,
     };
   }
 
@@ -33,20 +34,46 @@ export default class App extends Component {
   }
 
   setMenuItemInfoToOrder = (menuItem) => {
-    if (menuItem === undefined || menuItem === null || menuItem.quantity === 0)
-      return;
-    this.setState({
+    if (menuItem === undefined || menuItem === null) return;
+
+    this.setState((state) => ({
+      totalAmount: this.calculateNewTotalAmountByOrderChange(menuItem),
       orderedMenuItems: {
-        ...this.state.orderedMenuItems,
+        ...state.orderedMenuItems,
         [menuItem.id]: menuItem.quantity,
       },
-    });
+    }));
+  };
+
+  calculateNewTotalAmountByOrderChange = (changedMenuItem) => {
+    console.log("changedMenuItem:", changedMenuItem);
+    if (
+      this.state.orderedMenuItems[changedMenuItem.id] > changedMenuItem.quantity
+    ) {
+      return (
+        this.state.totalAmount -
+        (this.state.orderedMenuItems[changedMenuItem.id] -
+          changedMenuItem.quantity) *
+          changedMenuItem.price
+      );
+    } else {
+      return (
+        this.state.totalAmount +
+        (changedMenuItem.quantity -
+          (this.state.orderedMenuItems[changedMenuItem.id] === undefined
+            ? 0
+            : this.state.orderedMenuItems[changedMenuItem.id])) *
+          changedMenuItem.price
+      );
+    }
   };
 
   getOrderedMenuItems = () => {
     let orderedMenuItems = [];
-    for (const [key, value] of Object.entries(this.state.orderedMenuItems))
+    for (const [key, value] of Object.entries(this.state.orderedMenuItems)) {
+      if (value === 0) return;
       orderedMenuItems.push({ id: key, quantity: value });
+    }
 
     return orderedMenuItems;
   };
@@ -110,7 +137,8 @@ export default class App extends Component {
           </div>
           <div className="row mt-3 d-flex flex-column align-items-center justify-content-center mt-5">
             <div className="col-12 d-flex  align-items-center justify-content-center mb-3">
-              <h4 className="mr-2">Total amount: </h4> <h3>0.00$</h3>
+              <h4 className="mr-2">Total amount: </h4>{" "}
+              <h3>{this.state.totalAmount}.00$</h3>
             </div>
             <button
               type="button"
