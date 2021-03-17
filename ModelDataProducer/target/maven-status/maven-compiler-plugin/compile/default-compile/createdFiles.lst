@@ -1,7 +1,6 @@
 com\modelDataProducer\PizzaStore\model\MenuItem.class
 com\modelDataProducer\PizzaStore\model\StoreMetaData.class
 com\modelDataProducer\PizzaStore\model\RequestModel\StoreOrderDataRequest.class
-com\modelDataProducer\PizzaStore\service\OrderService\OrderServiceImp.class
 com\modelDataProducer\PizzaStore\model\MenuItemType.class
 com\modelDataProducer\PizzaStore\service\MediatorClient\MediatorClient.class
 com\modelDataProducer\PizzaStore\model\Order.class
@@ -15,12 +14,13 @@ com\modelDataProducer\PizzaStore\controller\PizzaOrderController.class
 com\modelDataProducer\PizzaStore\model\RequestModel\GetMaterialsByIdsRequest.class
 com\modelDataProducer\PizzaStore\model\ResponseModel\UpdateStoreBudgetResponse.class
 com\modelDataProducer\PizzaStore\service\MediatorClient\MediatorClientImp$5.class
+com\modelDataProducer\PizzaStore\service\OrderService\PizzaStoreServiceImp.class
+com\modelDataProducer\PizzaStore\service\OrderService\PizzaStoreService.class
 com\modelDataProducer\PizzaStore\model\RequestModel\UpdateStoreBudgetRequest.class
 com\modelDataProducer\PizzaStore\service\MediatorClient\MediatorClientImp$7.class
 com\modelDataProducer\PizzaStore\model\OrderedMenuItem.class
 com\modelDataProducer\PizzaStore\service\MediatorClient\MediatorClientImp$2.class
 com\modelDataProducer\PizzaStore\model\ResponseModel\StoreOrderDataResponse.class
-com\modelDataProducer\PizzaStore\service\OrderService\OrderService.class
 com\modelDataProducer\PizzaStore\PizzaStoreApplication.class
 com\modelDataProducer\PizzaStore\model\RequestModel\UpdateMaterialsQuantitiesRequest.class
 com\modelDataProducer\PizzaStore\model\Material.class

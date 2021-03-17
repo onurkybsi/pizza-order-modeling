@@ -5,8 +5,7 @@ import java.util.List;
 import com.modelDataProducer.PizzaStore.model.MenuItem;
 import com.modelDataProducer.PizzaStore.model.Order;
 import com.modelDataProducer.PizzaStore.model.ResponseModel.BaseResponse;
-import com.modelDataProducer.PizzaStore.service.MediatorClient.MediatorClient;
-import com.modelDataProducer.PizzaStore.service.OrderService.OrderService;
+import com.modelDataProducer.PizzaStore.service.OrderService.PizzaStoreService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,24 +20,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class PizzaOrderController {
     @Autowired
-    private MediatorClient mediatorClient;
+    private PizzaStoreService pizzaStoreService;
 
-    @Autowired
-    private OrderService orderService;
-
-    public PizzaOrderController(MediatorClient mediatorClient, OrderService orderService) {
-        this.mediatorClient = mediatorClient;
-        this.orderService = orderService;
+    public PizzaOrderController(PizzaStoreService pizzaStoreService) {
+        this.pizzaStoreService = pizzaStoreService;
     }
 
     @GetMapping("/getMenu")
     public List<MenuItem> getMenu() {
-        return mediatorClient.getMenu();
+        return pizzaStoreService.getMenu();
     }
 
     @PostMapping("/createOrder")
     public BaseResponse creatOrder(@RequestBody Order order) {
         // TO-DO: if isSuccess false return 500
-        return orderService.creatOrder(order);
+        return pizzaStoreService.creatOrder(order);
     }
 }
