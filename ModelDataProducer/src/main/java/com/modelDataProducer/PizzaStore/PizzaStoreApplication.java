@@ -30,7 +30,7 @@ public class PizzaStoreApplication {
 		boolean mediatorHealthy = false;
 
 		// Hard code must be changed !
-		String requestURL = "http://localhost:5000/api/health/checkHealth";
+		String requestURL = "http://mediator:5000/api/health/checkHealth";
 
 		HttpRequest healthCheckRequest = HttpRequest.newBuilder().uri(URI.create(requestURL)).build();
 		try {
