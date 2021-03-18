@@ -13,19 +13,19 @@ import com.modelDataProducer.PizzaStore.model.ResponseModel.UpdateMaterialsQuant
 import com.modelDataProducer.PizzaStore.model.ResponseModel.UpdateStoreBudgetResponse;
 
 public interface MediatorClient {
-    List<MenuItem> getMenu();
+    public List<MenuItem> getMenu();
 
-    List<Material> getMaterials();
+    public List<Material> getMaterials();
 
-    List<MenuItem> getMenuItemsByIds(List<String> ids);
+    public List<MenuItem> getMenuItemsByIds(List<String> ids);
 
-    List<Material> getMaterialsByIds(List<String> ids);
+    public List<Material> getMaterialsByIds(List<String> ids);
 
-    StoreMetaData getStoreBudget();
+    public StoreMetaData getStoreBudget();
 
-    UpdateStoreBudgetResponse updateStoreBudget(UpdateStoreBudgetRequest request);
+    public UpdateStoreBudgetResponse updateStoreBudget(UpdateStoreBudgetRequest request);
 
-    UpdateMaterialsQuantitiesResponse updateMaterialsQuantities(UpdateMaterialsQuantitiesRequest request);
+    public UpdateMaterialsQuantitiesResponse updateMaterialsQuantities(UpdateMaterialsQuantitiesRequest request);
 
-    BaseResponse storeOrderData(Order order);
+    public BaseResponse storeOrderData(Order order);
 }

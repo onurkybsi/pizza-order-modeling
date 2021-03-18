@@ -7,6 +7,6 @@ import com.modelDataProducer.PizzaStore.model.Order;
 import com.modelDataProducer.PizzaStore.model.ResponseModel.BaseResponse;
 
 public interface PizzaStoreService {
-    List<MenuItem> getMenu();
-    BaseResponse creatOrder(Order order);
+    public List<MenuItem> getMenu();
+    public BaseResponse creatOrder(Order order);
 }
