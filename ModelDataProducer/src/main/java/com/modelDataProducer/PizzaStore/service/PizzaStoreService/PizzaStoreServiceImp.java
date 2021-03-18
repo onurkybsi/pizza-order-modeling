@@ -33,10 +33,6 @@ public class PizzaStoreServiceImp implements PizzaStoreService {
     @Autowired
     private MediatorClient mediatorClient;
 
-    public PizzaStoreServiceImp(MediatorClient mediatorClient) {
-        this.mediatorClient = mediatorClient;
-    }
-
     @Override
     public List<MenuItem> getMenu() {
         return mediatorClient.getMenu();

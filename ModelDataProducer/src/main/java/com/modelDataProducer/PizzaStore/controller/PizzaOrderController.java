@@ -22,10 +22,6 @@ public class PizzaOrderController {
     @Autowired
     private PizzaStoreService pizzaStoreService;
 
-    public PizzaOrderController(PizzaStoreService pizzaStoreService) {
-        this.pizzaStoreService = pizzaStoreService;
-    }
-
     @GetMapping("/getMenu")
     public List<MenuItem> getMenu() {
         return pizzaStoreService.getMenu();
