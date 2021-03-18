@@ -20,13 +20,14 @@ namespace PizzaStore
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IElasticClient, ElasticClient>(sp => {
+            services.AddSingleton<IElasticClient, ElasticClient>(sp =>
+            {
                 var elasticClient = new ElasticClient(new ConnectionSettings(new Uri(Configuration["ElasticsearchURL"])));
 
-                bool mediatorConnectToElasticsearch = elasticClient.Ping().IsValid;
-
-                if(!mediatorConnectToElasticsearch) {
-                    throw new Exception("Couldn't connect to Elasticsearch!");
+                if (Configuration["WaitForElasticsearch"] == "1")
+                {
+                    if (!elasticClient.Ping().IsValid)
+                        throw new Exception("Couldn't connect to Elasticsearch!");
                 }
 
                 return elasticClient;

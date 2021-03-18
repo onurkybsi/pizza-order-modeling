@@ -1,6 +1,23 @@
 const express = require("express");
 const path = require("path");
+const http = require("http");
 require("dotenv").config();
+
+const HTT_OK_STATUS_CODE = 200;
+const HTTP_GET_VERB = "GET";
+
+http.request(
+  {
+    hostname: process.env.MODEL_DATA_PRODUCER_BASE_URL,
+    port: process.env.MODEL_DATA_PRODUCER_PORT,
+    path: process.env.MODEL_DATA_PRODUCER_HEALTH_CHECK_END_POINT,
+    method: HTTP_GET_VERB,
+  },
+  (res) => {
+    if (res.statusCode !== HTT_OK_STATUS_CODE)
+      throw new Error("Couldn't connected to ModelDataProducer!");
+  }
+);
 
 const router = express.Router();
 
