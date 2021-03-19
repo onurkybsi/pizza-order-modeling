@@ -233,7 +233,8 @@ public class MediatorClientImp implements MediatorClient {
             // TODO: handle exception
         }
 
-        return updateMaterialsQuantitiesResponse;
+        return updateMaterialsQuantitiesResponse == null ? new UpdateMaterialsQuantitiesResponse(false)
+                : updateMaterialsQuantitiesResponse;
     }
 
     @Override
@@ -251,6 +252,6 @@ public class MediatorClientImp implements MediatorClient {
             // TODO: handle exception
         }
 
-        return storeOrderDataResponse;
+        return storeOrderDataResponse == null ? new StoreOrderDataResponse(false) : storeOrderDataResponse;
     }
 }

@@ -7,6 +7,9 @@ public class BaseResponse {
     public BaseResponse() {
     }
 
+    public BaseResponse(boolean isSucces) {
+    }
+
     public BaseResponse(boolean isSuccess, String message) {
         this.isSuccess = isSuccess;
         this.message = message;
