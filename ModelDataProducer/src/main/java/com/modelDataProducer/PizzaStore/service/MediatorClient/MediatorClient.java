@@ -8,14 +8,12 @@ import com.modelDataProducer.PizzaStore.model.Order;
 import com.modelDataProducer.PizzaStore.model.StoreMetaData;
 import com.modelDataProducer.PizzaStore.model.RequestModel.UpdateMaterialsQuantitiesRequest;
 import com.modelDataProducer.PizzaStore.model.RequestModel.UpdateStoreBudgetRequest;
-import com.modelDataProducer.PizzaStore.model.ResponseModel.BaseResponse;
+import com.modelDataProducer.PizzaStore.model.ResponseModel.StoreOrderDataResponse;
 import com.modelDataProducer.PizzaStore.model.ResponseModel.UpdateMaterialsQuantitiesResponse;
 import com.modelDataProducer.PizzaStore.model.ResponseModel.UpdateStoreBudgetResponse;
 
 public interface MediatorClient {
     List<MenuItem> getMenu();
-
-    List<Material> getMaterials();
 
     List<MenuItem> getMenuItemsByIds(List<String> ids);
 
@@ -27,5 +25,5 @@ public interface MediatorClient {
 
     UpdateMaterialsQuantitiesResponse updateMaterialsQuantities(UpdateMaterialsQuantitiesRequest request);
 
-    BaseResponse storeOrderData(Order order);
+    StoreOrderDataResponse storeOrderData(Order order);
 }

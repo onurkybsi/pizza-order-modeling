@@ -5,6 +5,13 @@ import java.util.List;
 public class GetMaterialsByIdsRequest {
  private List<String> materialsIds;   
 
+    public GetMaterialsByIdsRequest() {
+    }
+
+    public GetMaterialsByIdsRequest(List<String> materialsIds) {
+        this.materialsIds = materialsIds;
+    }
+
     /**
      * @return List<String> return the materialsIds
      */

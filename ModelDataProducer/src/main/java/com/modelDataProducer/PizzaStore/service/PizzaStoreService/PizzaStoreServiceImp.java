@@ -33,6 +33,9 @@ public class PizzaStoreServiceImp implements PizzaStoreService {
     @Autowired
     private MediatorClient mediatorClient;
 
+    public PizzaStoreServiceImp() {
+    }
+
     @Override
     public List<MenuItem> getMenu() {
         return mediatorClient.getMenu();
@@ -202,8 +205,7 @@ public class PizzaStoreServiceImp implements PizzaStoreService {
             storeBudget = storeBudget.subtract(getExpensesToBeSubtractFromBudget(missingMaterialsCost));
         }
 
-        UpdateMaterialsQuantitiesResponse updateMaterialsQuantitiesResponse = mediatorClient
-                .updateMaterialsQuantities(new UpdateMaterialsQuantitiesRequest(materialsQuantitiesAfterOrdering));
+        UpdateMaterialsQuantitiesResponse updateMaterialsQuantitiesResponse = mediatorClient.updateMaterialsQuantities(new UpdateMaterialsQuantitiesRequest(materialsQuantitiesAfterOrdering));
         if (!updateMaterialsQuantitiesResponse.isIsSuccess()) {
             return new BaseResponse(false, SOMETHING_WENT_WRONG_MESSAGE);
         }

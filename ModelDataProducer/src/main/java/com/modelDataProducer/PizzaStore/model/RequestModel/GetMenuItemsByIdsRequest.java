@@ -5,6 +5,13 @@ import java.util.List;
 public class GetMenuItemsByIdsRequest {
     private List<String> menuItemIds;
 
+    public GetMenuItemsByIdsRequest() {
+    }
+
+    public GetMenuItemsByIdsRequest(List<String> menuItemIds) {
+        this.menuItemIds = menuItemIds;
+    }
+
     /**
      * @return List<String> return the menuItemIds
      */

@@ -1,15 +1,8 @@
 package com.modelDataProducer.PizzaStore.service.MediatorClient;
 
-import java.lang.reflect.Type;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.modelDataProducer.PizzaStore.model.Material;
@@ -25,14 +18,18 @@ import com.modelDataProducer.PizzaStore.model.ResponseModel.StoreOrderDataRespon
 import com.modelDataProducer.PizzaStore.model.ResponseModel.UpdateMaterialsQuantitiesResponse;
 import com.modelDataProducer.PizzaStore.model.ResponseModel.UpdateStoreBudgetResponse;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.jmx.access.InvalidInvocationException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
-public class MediatorClientImp implements MediatorClient {
+public class MediatorClientImp implements MediatorClient{
     @Value("${MEDIATOR_BASE_URL}")
     private String mediatorBaseURL;
     @Value("${GETMENU_ENDPOINT}")
@@ -52,77 +49,47 @@ public class MediatorClientImp implements MediatorClient {
     @Value("${STORE_ORDER_DATA_ENDPOINT}")
     private String storeOrderDataEndPoint;
 
-    private static final String APP_JSON_HEADER_VAL = "application/json";
-
-    private HttpClient client;
+    HttpClient  httpClient;
+    Gson gson;
 
     public MediatorClientImp() {
-        this.client = HttpClient.newHttpClient();
+        this.httpClient = HttpClientBuilder.create().build();
+        this.gson = new Gson();
     }
 
     @Override
     public List<MenuItem> getMenu() {
-        ArrayList<MenuItem> menu = new ArrayList<>();
+        ArrayList<MenuItem> menu = new ArrayList<MenuItem>();
 
-        HttpRequest mediatorGetMenuRequest = createGetMediatorRequest(getMenuEndPoint);
-
-        try {
-            HttpResponse<String> response = client.send(mediatorGetMenuRequest, BodyHandlers.ofString());
-
-            menu = convertJsonStringToGivenTypeObject(new TypeToken<ArrayList<MenuItem>>() {
-            }.getType(), response.body());
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-
-        return menu;
-    }
-
-    @Override
-    public List<Material> getMaterials() {
-        ArrayList<Material> materials = new ArrayList<>();
-
-        HttpRequest mediatorGetMaterialsRequest = createGetMediatorRequest(getMaterialsEndPoint);
+        HttpGet getRequest = new HttpGet(mediatorBaseURL+getMenuEndPoint);
 
         try {
-            HttpResponse<String> response = client.send(mediatorGetMaterialsRequest, BodyHandlers.ofString());
+            String resbody = httpClient.execute(getRequest, new BasicResponseHandler());
 
-            materials = convertJsonStringToGivenTypeObject(new TypeToken<ArrayList<Material>>() {
-            }.getType(), response.body());
+            menu = gson.fromJson(resbody, (new TypeToken<ArrayList<MenuItem>>() {
+            }.getType()));
         } catch (Exception e) {
-            // TODO: handle exception
+            //TODO: handle exception
         }
-
-        return materials;
-    }
-
-    private HttpRequest createGetMediatorRequest(String endpoint) {
-        String requestURL = mediatorBaseURL + endpoint;
-
-        return HttpRequest.newBuilder().uri(URI.create(requestURL)).header("Accept", APP_JSON_HEADER_VAL).build();
+        return menu == null ? new ArrayList<MenuItem>() : menu;
     }
 
     @Override
     public List<MenuItem> getMenuItemsByIds(List<String> ids) {
-        ArrayList<MenuItem> menu = new ArrayList<>();
+        ArrayList<MenuItem> menuItems = new ArrayList<>();
 
-        GetMenuItemsByIdsRequest requestBody = new GetMenuItemsByIdsRequest();
-        requestBody.setMenuItemIds(ids);
-
-        String requestURL = createGetMenuItemsByIdsEndpointURL(requestBody);
-
-        HttpRequest mediatorGetMenuItemsByIdsRequest = HttpRequest.newBuilder().uri(URI.create(requestURL)).build();
+        String requestURL = createGetMenuItemsByIdsEndpointURL(new GetMenuItemsByIdsRequest(ids));
+        HttpGet getRequest = new HttpGet(requestURL);
 
         try {
-            HttpResponse<String> response = client.send(mediatorGetMenuItemsByIdsRequest, BodyHandlers.ofString());
+            String resbody = httpClient.execute(getRequest, new BasicResponseHandler());
 
-            menu = convertJsonStringToGivenTypeObject(new TypeToken<ArrayList<MenuItem>>() {
-            }.getType(), response.body());
+            menuItems = gson.fromJson(resbody, (new TypeToken<ArrayList<MenuItem>>() {
+            }.getType()));
         } catch (Exception e) {
-            // TODO: handle exception
+            //TODO: handle exception
         }
-
-        return menu;
+        return menuItems == null ? new ArrayList<MenuItem>() : menuItems;
     }
 
     private String createGetMenuItemsByIdsEndpointURL(GetMenuItemsByIdsRequest requestBody) {
@@ -135,23 +102,18 @@ public class MediatorClientImp implements MediatorClient {
     public List<Material> getMaterialsByIds(List<String> ids) {
         ArrayList<Material> materials = new ArrayList<>();
 
-        GetMaterialsByIdsRequest requestBody = new GetMaterialsByIdsRequest();
-        requestBody.setMaterialsIds(ids);
-
-        String requestURL = createGetMaterialsByIdsEndpointURL(requestBody);
-
-        HttpRequest mediatorGetMaterialsByIdsRequest = HttpRequest.newBuilder().uri(URI.create(requestURL)).build();
+        String requestURL = createGetMaterialsByIdsEndpointURL(new GetMaterialsByIdsRequest(ids));
+        HttpGet getRequest = new HttpGet(requestURL);
 
         try {
-            HttpResponse<String> response = client.send(mediatorGetMaterialsByIdsRequest, BodyHandlers.ofString());
+            String resbody = httpClient.execute(getRequest, new BasicResponseHandler());
 
-            materials = convertJsonStringToGivenTypeObject(new TypeToken<ArrayList<Material>>() {
-            }.getType(), response.body());
+            materials = gson.fromJson(resbody, (new TypeToken<ArrayList<Material>>() {
+            }.getType()));
         } catch (Exception e) {
-            // TODO: handle exception
+            //TODO: handle exception
         }
-
-        return materials;
+        return materials == null ? new ArrayList<Material>() : materials;
     }
 
     private String createGetMaterialsByIdsEndpointURL(GetMaterialsByIdsRequest requestBody) {
@@ -162,96 +124,78 @@ public class MediatorClientImp implements MediatorClient {
 
     @Override
     public StoreMetaData getStoreBudget() {
-        StoreMetaData budgetMetaData = new StoreMetaData();
+        StoreMetaData budgetData = new StoreMetaData();
 
-        HttpRequest getStoreBudgetRequest = createGetMediatorRequest(getStoreBudgetEndPoint);
-
+        HttpGet getRequest = new HttpGet(mediatorBaseURL+getStoreBudgetEndPoint);
+        
         try {
-            HttpResponse<String> response = client.send(getStoreBudgetRequest, BodyHandlers.ofString());
+            String resbody = httpClient.execute(getRequest, new BasicResponseHandler());
 
-            budgetMetaData = convertJsonStringToGivenTypeObject(new TypeToken<StoreMetaData>() {
-            }.getType(), response.body());
+            budgetData = gson.fromJson(resbody, (new TypeToken<StoreMetaData>() {
+            }.getType()));
         } catch (Exception e) {
-            // TODO: handle exception
+            //TODO: handle exception
         }
-
-        return budgetMetaData;
-    }
-
-    private <T> T convertJsonStringToGivenTypeObject(Type type, String jsonString) {
-        return new Gson().fromJson(jsonString, type);
+        return budgetData;
     }
 
     @Override
     public UpdateStoreBudgetResponse updateStoreBudget(UpdateStoreBudgetRequest request) {
         UpdateStoreBudgetResponse updateStoreBudgetResponse = new UpdateStoreBudgetResponse();
 
-        HttpRequest updateStoreBudgetRequest = createMediatorPostRequest(request, updateStoreBudgetEndPoint);
+        HttpPost postRequest = new HttpPost(mediatorBaseURL+updateStoreBudgetEndPoint);
 
         try {
-            HttpResponse<String> response = client.send(updateStoreBudgetRequest, BodyHandlers.ofString());
-            updateStoreBudgetResponse = convertJsonStringToGivenTypeObject(new TypeToken<UpdateStoreBudgetResponse>() {
-            }.getType(), response.body());
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
+            StringEntity postingString = new StringEntity(gson.toJson(request));
+            postRequest.setEntity(postingString);
+            postRequest.setHeader("Content-type", "application/json");
 
+            String resbody = httpClient.execute(postRequest, new BasicResponseHandler());
+            updateStoreBudgetResponse = gson.fromJson(resbody, (new TypeToken<UpdateStoreBudgetResponse>() {
+            }.getType()));
+        } catch (Exception e) {
+            //TODO: handle exception
+        }
         return updateStoreBudgetResponse;
-    }
-
-    private <T> HttpRequest createMediatorPostRequest(T requestBody, String endpoint) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String requestBodyString = "";
-
-        try {
-            requestBodyString = objectMapper.writeValueAsString(requestBody);
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-
-        String requestedUrl = mediatorBaseURL + endpoint;
-
-        return HttpRequest.newBuilder().uri(URI.create(requestedUrl)).header("Accept", APP_JSON_HEADER_VAL)
-                .header("Content-Type", APP_JSON_HEADER_VAL)
-                .POST(HttpRequest.BodyPublishers.ofString(requestBodyString)).build();
     }
 
     @Override
     public UpdateMaterialsQuantitiesResponse updateMaterialsQuantities(UpdateMaterialsQuantitiesRequest request) {
         UpdateMaterialsQuantitiesResponse updateMaterialsQuantitiesResponse = new UpdateMaterialsQuantitiesResponse();
 
-        HttpRequest updateMaterialsQuantitiesRequest = createMediatorPostRequest(request,
-                updateMaterialsQuantitiesEndPoint);
+        HttpPost postRequest = new HttpPost(mediatorBaseURL+updateMaterialsQuantitiesEndPoint);
 
         try {
-            HttpResponse<String> response = client.send(updateMaterialsQuantitiesRequest,
-                    HttpResponse.BodyHandlers.ofString());
-            updateMaterialsQuantitiesResponse = convertJsonStringToGivenTypeObject(
-                    new TypeToken<UpdateMaterialsQuantitiesResponse>() {
-                    }.getType(), response.body());
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
+            StringEntity postingString = new StringEntity(gson.toJson(request));
+            postRequest.setEntity(postingString);
+            postRequest.setHeader("Content-type", "application/json");
 
-        return updateMaterialsQuantitiesResponse == null ? new UpdateMaterialsQuantitiesResponse(false)
-                : updateMaterialsQuantitiesResponse;
+            String resbody = httpClient.execute(postRequest, new BasicResponseHandler());
+            updateMaterialsQuantitiesResponse = gson.fromJson(resbody, (new TypeToken<UpdateMaterialsQuantitiesResponse>() {
+            }.getType()));
+        } catch (Exception e) {
+            //TODO: handle exception
+        }
+        return updateMaterialsQuantitiesResponse;
     }
 
     @Override
     public StoreOrderDataResponse storeOrderData(Order order) {
         StoreOrderDataResponse storeOrderDataResponse = new StoreOrderDataResponse();
 
-        HttpRequest storeOrderDataRequest = createMediatorPostRequest(new StoreOrderDataRequest(order),
-                storeOrderDataEndPoint);
+        HttpPost postRequest = new HttpPost(mediatorBaseURL+storeOrderDataEndPoint);
 
         try {
-            HttpResponse<String> response = client.send(storeOrderDataRequest, BodyHandlers.ofString());
-            storeOrderDataResponse = convertJsonStringToGivenTypeObject(new TypeToken<StoreOrderDataResponse>() {
-            }.getType(), response.body());
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
+            StringEntity postingString = new StringEntity(gson.toJson(new StoreOrderDataRequest(order)));
+            postRequest.setEntity(postingString);
+            postRequest.setHeader("Content-type", "application/json");
 
-        return storeOrderDataResponse == null ? new StoreOrderDataResponse(false) : storeOrderDataResponse;
+            String resbody = httpClient.execute(postRequest, new BasicResponseHandler());
+            storeOrderDataResponse = gson.fromJson(resbody, (new TypeToken<StoreOrderDataResponse>() {
+            }.getType()));
+        } catch (Exception e) {
+            //TODO: handle exception
+        }
+        return storeOrderDataResponse;
     }
 }
