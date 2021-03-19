@@ -2,7 +2,7 @@
 It is a simple implementation of pizza order modeling. Brings the menu from the database to the user interface. It complete the order according to the business rules. All order details are entered in the database.
 
 #### UserInterface: It is a Node.js application that serve a SPA frontend implementation coded with React.
-#### ModelDataProducer: Checks business rules for data received from the UserInterface and passes the data to the Mediator application for saving.
+#### ModelDataProducer: Checks business rules for data received from the UserInterface and passes the data to the Mediator application for storing.
 #### Mediator: It is responsible for storing the pizza store data in Elasticsearch and serving it on the REST API.
 
 ## Installation
