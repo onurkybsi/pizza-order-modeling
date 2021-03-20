@@ -7,7 +7,6 @@ com\modelDataProducer\PizzaStore\model\Order.class
 com\modelDataProducer\PizzaStore\model\RequestModel\GetMenuItemsByIdsRequest.class
 com\modelDataProducer\PizzaStore\model\ResponseModel\UpdateMaterialsQuantitiesResponse.class
 com\modelDataProducer\PizzaStore\model\MaterialType.class
-com\modelDataProducer\PizzaStore\service\MediatorClient\MediatorClientImp$8.class
 com\modelDataProducer\PizzaStore\controller\HealthController.class
 com\modelDataProducer\PizzaStore\service\MediatorClient\MediatorClientImp$3.class
 com\modelDataProducer\PizzaStore\model\MenuItemRequiredMaterial.class
